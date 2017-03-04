@@ -41,7 +41,7 @@ Theta_grad = zeros(size(Theta));
 %
 
 D = (X * Theta' - Y) .* R;
-J = sum(sum(D .^ 2)) / 2;
+J = sum(sum(D .^ 2)) / 2 + lambda / 2 * (sum(sum(Theta .^ 2)) + sum(sum(X .^ 2)));
 
 % m: number of movies
 % u: number of users
@@ -51,14 +51,14 @@ for i = 1:rows(X)
     % for each movie, consider all users all rated it
 
     % 1 x f        1 x u     u x f
-    X_grad(i, :) = D(i, :) * Theta;
+    X_grad(i, :) = D(i, :) * Theta + lambda * X(i, :);
 end
 
 for j = 1:rows(Theta)
     % for each user, consider all movies he/she rated
 
     % 1 x f            1 x m      m x f
-    Theta_grad(j, :) = D(:, j)' * X;
+    Theta_grad(j, :) = D(:, j)' * X + lambda * Theta(j, :);
 end
 
 % =============================================================
